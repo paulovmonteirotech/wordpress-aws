@@ -175,18 +175,18 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 cat > /caminho/para/wp/docker-compose.yaml <<EOL
 services:
- wordpress:
-    image: wordpress:latest
-    restart: always
-    ports:
-    - "80:80"
-    environment:
-        WORDPRESS_DB_HOST: seuhostRDS
-        WORDPRESS_DB_NAME: dbname
-        WORDPRESS_DB_USER: username
-        WORDPRESS_DB_PASSWORD: suasenha
-    volumes:
-        - /efs/efs_wordpress:/var/www/html
+     wordpress:
+      image: wordpress:latest
+      restart: always
+      ports:
+      - "80:80"
+      environment:
+          WORDPRESS_DB_HOST: seuhostRDS
+          WORDPRESS_DB_NAME: dbname
+          WORDPRESS_DB_USER: username
+          WORDPRESS_DB_PASSWORD: suasenha
+      volumes:
+          - /efs/efs_wordpress:/var/www/html
 EOL
 Inicia o container do WordPress
 cd /caminho/para/wp
