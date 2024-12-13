@@ -1,0 +1,70 @@
+
+#!/bin/bash
+
+# Atualiza e instala dependências
+
+sudo apt update -y && sudo apt upgrade -y
+
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+#Instala o Docker
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt update -y
+
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+# Inicia e habilita o serviço Docker
+
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+sudo usermod -aG docker ubuntu
+
+# Instala o cliente MySQL
+
+
+sudo apt install -y mysql-client-core-8.0
+
+# Baixa a imagem do WordPress
+
+sudo docker pull wordpress
+# Monta o EFS
+
+sudo mkdir -p /efs
+
+sudo apt-get install -y nfs-common
+
+sudo mount -t nfs4 -o nfsvers=4.1 (EFS-DNS):/ /efs
+
+# Configura o Docker Compose
+
+sudo mkdir -p /caminho/para/wp
+
+sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+#Cria o arquivo docker-compose.yaml
+
+cat > /caminho/para/wp/docker-compose.yaml <<EOL
+services:
+wordpress:
+image: wordpress:latest
+restart: always
+ports:
+"80:80"
+environment:
+WORDPRESS_DB_HOST: seuhostRDS
+WORDPRESS_DB_NAME: dbname
+WORDPRESS_DB_USER: username
+WORDPRESS_DB_PASSWORD: suasenha
+volumes:
+/efs/efs_wordpress:/var/www/html
+EOL
+Inicia o container do WordPress
+cd /caminho/para/wp
+sudo docker compose up -d
