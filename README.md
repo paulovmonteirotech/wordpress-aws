@@ -65,25 +65,50 @@ Este projeto tem como objetivo a criação de instâncias EC2 privadas na AWS ut
 - associe as subnets publicas a tabela de rotas publica
 - **Rota**: 0.0.0.0/0 - my-internet-gateway-wp
 
-## 6. Grupos de Segurança
-### Security Group: ec2-sg
-- **Regras de Entrada**:
-  - **SSH**: 22
-  - **HTTP**: 80
-  - **HTTPS**: 443
-  - **Custom TCP**: 8080
-  - **NFS**: 2049
-  - **MYSQL/AURORA**: 3306
+## 6. Grupos de Segurança (Security Groups)
 
-### Security Group: load-balancer-sg
-- **Regras de Entrada**:
-  - **HTTP**: 0.0.0.0/0 - 80
-  - **Custom TCP**: 0.0.0.0/0 - 8080
-  - **HTTPS**: 0.0.0.0/0 - 443
+### ec2-sg
+
+Regras de entrada:
+
+SSH: Porta 22 (somente do bastion-host).
+
+HTTP: Porta 80 (apenas do load-balancer-sg).
+
+HTTPS: Porta 443 (apenas do load-balancer-sg).
+
+Custom TCP: Porta 8080 (apenas do load-balancer-sg).
+
+NFS: Porta 2049 (apenas do efs-sg).
+
+MySQL/Aurora: Porta 3306 (apenas do rds-sg).
+
+### load-balancer-sg
+
+Regras de entrada:
+
+HTTP: Porta 80 (0.0.0.0/0).
+
+HTTPS: Porta 443 (0.0.0.0/0).
+
+Custom TCP: Porta 8080 (0.0.0.0/0).
+
+### efs-sg
+
+Regras de entrada:
+
+NFS: Porta 2049 (somente do ec2-sg).
+
+### rds-sg
+
+Regras de entrada:
+
+MySQL/Aurora: Porta 3306 (somente do ec2-sg).
 
 ## 7. EFS - Elastic File System
 ### Nome do EFS: EFS-WP
 - **Associado à VPC**: my-vpc-wp
+- **Security Group**: efs-sg
 
 ## 8. Lançamento da Instância EC2 Privada
 ### Configurações da Instância
@@ -175,7 +200,8 @@ sudo docker compose up -d
   - **Listener Protocol**: HTTP
   - **Listener Port**: 80
   - **Health Check**: HTTP, Port: 80, Path: /
-
+  - **Security Group**: load-balance-sg
+    
 ## 10. Configuração do WordPress
 ### URLs
 As configurações siteurl e home precisam apontar para o DNS público do Load Balancer.
