@@ -175,7 +175,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 
 cat > /caminho/para/wp/docker-compose.yaml <<EOL
 services:
-  wordpress:
+ wordpress:
     image: wordpress:latest
     restart: always
     ports:
