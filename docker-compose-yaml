@@ -1,0 +1,13 @@
+services:
+ wordpress:
+    image: wordpress:latest
+    restart: always
+    ports:
+    - "80:80"
+    environment:
+        WORDPRESS_DB_HOST: seuhostRDS
+        WORDPRESS_DB_NAME: dbname
+        WORDPRESS_DB_USER: username
+        WORDPRESS_DB_PASSWORD: suasenha
+    volumes:
+        - /efs/efs_wordpress:/var/www/html
