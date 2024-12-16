@@ -188,7 +188,7 @@ services:
       volumes:
           - /efs/efs_wordpress:/var/www/html
 EOL
-Inicia o container do WordPress
+#Inicia o container do WordPress
 cd /caminho/para/wp
 sudo docker compose up -d
 ```
